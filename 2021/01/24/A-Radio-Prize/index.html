@@ -4,7 +4,7 @@
   <!-- 元数据 -->
   <meta charset="utf-8">
   <link rel="icon" href="/images/icon.ico">
-  <title>dijkstra最短路及优化 | rwbyblake的博客</title>
+  <title>A-Radio-Prize | rwbyblake的博客</title>
   <meta name="author" content="rwbyblake" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -14,21 +14,20 @@
   <meta name="baidu-site-verification" content="code-hyP6um023h" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="图论, 数据结构" />
+    <meta name="keywords" content="思维" />
   
-  <meta name="description" content="算法描述该算法维护了两个点集，S和V。其中S集合为已经确定到源点最短路径的点集，V集合为未确定到源点最短路径的点集。 循环进行以下操作直到所有点都确定了与源点的最短路径：从V集合中取出一点，使得该点到源点距离为V集合中最短。然后通过该点，更新与该点相连的点距离源点的距离。最后，将该点放入S集合中。 算法正确性该算法最关键的步骤就是从V集合中取点的操作。设i为V集合中一点，j为V集合中任意其他一点，">
+  <meta name="description" content="题意给定一棵树，树上每条边及每个点都有权值。定义$P_u&#x3D;\sum_{v}d(u,v)(t_u+t_v)$其中$d(u,v)$为树上u到v的距离，$t_u$和$t_v$分别是两点权值，求每个点的P值。 分析首先我们可以看到$P_u$可以分成 $t_u\sum_{v}d(u,v)+\sum_vt_vd(u,v)$ ，则我们只需要知道对于每一个节点$\sum_{v}d(u,v)$和$\sum_vt_v">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dijkstra最短路及优化">
-<meta property="og:url" content="http://example.com/2021/01/18/dijkstra%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%8F%8A%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:title" content="A-Radio-Prize">
+<meta property="og:url" content="http://example.com/2021/01/24/A-Radio-Prize/index.html">
 <meta property="og:site_name" content="rwbyblake的博客">
-<meta property="og:description" content="算法描述该算法维护了两个点集，S和V。其中S集合为已经确定到源点最短路径的点集，V集合为未确定到源点最短路径的点集。 循环进行以下操作直到所有点都确定了与源点的最短路径：从V集合中取出一点，使得该点到源点距离为V集合中最短。然后通过该点，更新与该点相连的点距离源点的距离。最后，将该点放入S集合中。 算法正确性该算法最关键的步骤就是从V集合中取点的操作。设i为V集合中一点，j为V集合中任意其他一点，">
+<meta property="og:description" content="题意给定一棵树，树上每条边及每个点都有权值。定义$P_u&#x3D;\sum_{v}d(u,v)(t_u+t_v)$其中$d(u,v)$为树上u到v的距离，$t_u$和$t_v$分别是两点权值，求每个点的P值。 分析首先我们可以看到$P_u$可以分成 $t_u\sum_{v}d(u,v)+\sum_vt_vd(u,v)$ ，则我们只需要知道对于每一个节点$\sum_{v}d(u,v)$和$\sum_vt_v">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/icon.ico">
-<meta property="article:published_time" content="2021-01-18T06:35:00.000Z">
-<meta property="article:modified_time" content="2021-01-18T08:10:20.634Z">
+<meta property="article:published_time" content="2021-01-24T14:35:56.000Z">
+<meta property="article:modified_time" content="2021-01-24T15:40:06.721Z">
 <meta property="article:author" content="rwbyblake">
-<meta property="article:tag" content="图论">
-<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="思维">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/icon.ico">
 <meta name="twitter:site" content="@Candiinya">
@@ -128,7 +127,7 @@
     </div>
     <div class="textwidget">
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">算法描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">算法正确性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%B8%8D%E8%B6%B3"><span class="toc-number">3.</span> <span class="toc-text">一些不足</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%EF%BC%88%E4%BA%8C%E5%8F%89%E5%A0%86%EF%BC%89%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">优先队列（二叉堆）优化</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
         
     </div>
 </aside>
@@ -206,7 +205,7 @@
         <div class="kratos-hentry kratos-post-inner clearfix">
             <header class="kratos-entry-header">
                 <h1 class="kratos-entry-title text-center">
-                    dijkstra最短路及优化
+                    A-Radio-Prize
                 </h1>
                 
                         
@@ -234,7 +233,7 @@
                                     <div class="kratos-post-meta text-center">
                                         <span>
                                                         <i class="fa fa-calendar"></i>
-                                                        2021-01-18
+                                                        2021-01-24
                                                             <i class="fa fa-folder"></i> 分类于
                                                             <a class="label-link" href="/categories/ACM/">ACM</a>
                                                                 <i class="fa fa-user"></i> 作者
@@ -243,7 +242,7 @@
                                                                     
                                                                         
                                                                                     ~
-                                                                                    2.40K
+                                                                                    2.51K
                                                                                         
                                                                                             字
                                                                                             
@@ -253,18 +252,21 @@
             <div class="kratos-post-content">
                 
                     <div class="kratos-post-inner-toc">
-                        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">算法描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">算法正确性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%B8%8D%E8%B6%B3"><span class="toc-number">3.</span> <span class="toc-text">一些不足</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%EF%BC%88%E4%BA%8C%E5%8F%89%E5%A0%86%EF%BC%89%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">优先队列（二叉堆）优化</span></a></li></ol>
+                        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
                     </div>
                     
                         <hr />
-                        <h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>该算法维护了两个点集，S和V。其中S集合为已经确定到源点最短路径的点集，V集合为未确定到源点最短路径的点集。</p>
-<p>循环进行以下操作直到所有点都确定了与源点的最短路径：从V集合中取出一点，使得该点到源点距离为V集合中最短。然后通过该点，更新与该点相连的点距离源点的距离。最后，将该点放入S集合中。</p>
-<h2 id="算法正确性"><a href="#算法正确性" class="headerlink" title="算法正确性"></a>算法正确性</h2><p>该算法最关键的步骤就是从V集合中取点的操作。设i为V集合中一点，j为V集合中任意其他一点，dis[i]&lt;dis[j]，则dis[i]&lt;dis[j]+a[j][i]，故点i距离源点距离为确定值。其中dis[i]为源点到点i的最短路径，a[j][i]为点j到点i的距离。<br>由于我们需要取一个已经确定了与源点最短路径的点，如果取出的点的dis[i]并不是最小的，那么其他点是可以更新该点的，也就是说该点距离源点的最短路径并不是确定的。相反，如果dis[i]小于集合V中的任何其他点到源点的距离，那么集合V中的其他点一定不能更新dis[i]使dis[i]更小，则点v距离源点的距离dis[i]一定是确定的。</p>
-<h2 id="一些不足"><a href="#一些不足" class="headerlink" title="一些不足"></a>一些不足</h2><p>首先，dijkstra算法得以成立的前提是从V集合中取出的点距离源点的最短路是确定的，不会因为后续的更新而变化的，但是如果图存在负权，则dis[i]&lt;dis[j],但dis[i]不一定小于dis[j]+a[j][i]，这时选择的i点距离源点的最短路就不是确定的了。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> h[N],cnt = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> w,v,next;</span><br><span class="line">&#125;a[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;		<span class="comment">//链式前向星建图</span></span><br><span class="line">    a[++cnt].w = w;</span><br><span class="line">    a[cnt].v = v;</span><br><span class="line">    a[cnt].next = h[u];</span><br><span class="line">    h[u] = cnt;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> n,m;</span><br><span class="line"><span class="keyword">int</span> dis[N],vis[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dijkstra</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(dis,<span class="number">0x3f</span>,<span class="keyword">sizeof</span>(dis));</span><br><span class="line">    <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span>(vis));</span><br><span class="line">    dis[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> u = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>;j&lt;=n;j++)&#123;		<span class="comment">//从集合V中选择距离源点最短的点</span></span><br><span class="line">            <span class="keyword">if</span>(!vis[j]&amp;&amp;dis[j]&lt;dis[u])  u = j;</span><br><span class="line">        &#125;</span><br><span class="line">        vis[u] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = h[u];j;j = a[j].next)&#123;	<span class="comment">//通过该点更新</span></span><br><span class="line">            <span class="keyword">int</span> v = a[j].v,w = a[j].w;</span><br><span class="line">            dis[v] = min(dis[v],dis[u]+w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="优先队列（二叉堆）优化"><a href="#优先队列（二叉堆）优化" class="headerlink" title="优先队列（二叉堆）优化"></a>优先队列（二叉堆）优化</h2><p>朴素算法中如果想从集合V中选点需要$O(n)$的时间复杂度，但是如果使用优先队列可以将这一步骤优化到$O(logn)$。直接上代码。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> h[N],cnt = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> w,v,next;</span><br><span class="line">&#125;a[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;</span><br><span class="line">    a[++cnt].w = w;</span><br><span class="line">    a[cnt].v = v;</span><br><span class="line">    a[cnt].next = h[u];</span><br><span class="line">    h[u] = cnt;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">priority_queue</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt;&gt; q; <span class="comment">//这里定义的是最大堆，可以在定义的时候改成最小堆</span></span><br><span class="line"><span class="keyword">int</span> n,m,u,v,w;</span><br><span class="line"><span class="keyword">int</span> dis[N],vis[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dijkstra</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(dis,<span class="number">0x3f</span>,<span class="keyword">sizeof</span>(dis));</span><br><span class="line">    <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span>(vis));</span><br><span class="line">    dis[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    q.push(<span class="built_in">make_pair</span>(<span class="number">0</span>,<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">while</span>(!q.empty())&#123;</span><br><span class="line">        <span class="keyword">int</span> u = q.top().second;<span class="comment">//取出V集合中距离源点最短的点</span></span><br><span class="line">        q.pop();</span><br><span class="line">        <span class="keyword">if</span>(vis[u])<span class="keyword">continue</span>;</span><br><span class="line">        vis[u] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = h[u];i;i = a[i].next)&#123;			<span class="comment">//松弛</span></span><br><span class="line">            <span class="keyword">int</span> v = a[i].v,w = a[i].w;</span><br><span class="line">            <span class="keyword">if</span>(dis[v] &gt; dis[u] + w)&#123;</span><br><span class="line">                dis[v] = dis[u] + w;</span><br><span class="line">                q.push(<span class="built_in">make_pair</span>(-dis[v],v));		<span class="comment">//由于定义的大堆，需要加入最短路径的相反数以获得最小堆</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/33162490">【原创】算法系列——四种最短路算法：Floyd，Dijkstra，Bellman-Ford，SPFA</a></p>
+                        <h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>给定一棵树，树上每条边及每个点都有权值。定义$P_u=\sum_{v}d(u,v)(t_u+t_v)$其中$d(u,v)$为树上u到v的距离，$t_u$和$t_v$分别是两点权值，求每个点的P值。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>首先我们可以看到$P_u$可以分成 $t_u\sum_{v}d(u,v)+\sum_vt_vd(u,v)$ ，则我们只需要知道对于每一个节点$\sum_{v}d(u,v)$和$\sum_vt_vd(u,v)$的值即可。直接计算复杂度太高，我们可以考虑通过一个已经计算出值的节点计算当前节点值。</p>
+<p>当我们已经计算得到$u$的值，并想要得到与$u$相邻$u’$的值时，可以将除了$u’$的其他节点分为两部分，一部分不经过$u$，另一部分经过$u$。</p>
+<ul>
+<li><p>计算$\sum_{v}d(u,v)$时，对于这两部分节点来说，不经过$u$的节点的$d(u’,v)$相比$d(u,v)$减少了$w_i$，经过$u$的节点的$d(u’,v)$相比$d(u,v)$增加了$w_i$，故只需知道两部分节点的分别数量即可得到$\sum_{v}d(u,v)$。</p>
+</li>
+<li><p>计算$\sum_vt_vd(u,v)$时，对于这两部分节点来说，不经过$u$的节点的$t_vd(u’,v)$相比$t_vd(u,v)$减少了$w_i\sum_vtv$，经过$u$的节点的$t_vd(u’,v)$相比$t_vd(u,v)$增加了了$w_i\sum_vtv$，所以这部分只需知道两部分节点的点值和即可得到$\sum_vt_vd(u,v)$</p>
+</li>
+</ul>
+<p>有了转移方法后，我们需要获得对于每一个节点两部分分别的值，故可以指定任意节点为根节点，通过一次dfs，得到子节点数量和及子节点点值和后，通过所有节点数量和所有节点点值和得到另一部分节点的对应值，即可进行转移。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">5e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">long</span> <span class="keyword">long</span> sum1[N],sum2[N],num[N],sum[N],Sum;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> u,v,w,next;</span><br><span class="line">&#125;a[N];</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">int</span> f[N],cnt;</span><br><span class="line"><span class="keyword">long</span> <span class="keyword">long</span> value[N],dis[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span></span>&#123;</span><br><span class="line">    a[++cnt].v =v;</span><br><span class="line">    a[cnt].w = w;</span><br><span class="line">    a[cnt].next = f[u];</span><br><span class="line">    f[u] = cnt;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> vis[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs1</span><span class="params">(<span class="keyword">int</span> u)</span></span>&#123;</span><br><span class="line">    num[u] = <span class="number">1</span>;</span><br><span class="line">    sum[u] = value[u];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = f[u];i;i = a[i].next)&#123;</span><br><span class="line">        <span class="keyword">int</span> v = a[i].v,w = a[i].w;</span><br><span class="line">        <span class="keyword">if</span>(!vis[v])&#123;</span><br><span class="line">            vis[v] = <span class="number">1</span>;</span><br><span class="line">            dis[v] = dis[u]+w;</span><br><span class="line">            sum1[<span class="number">1</span>] += dis[v];</span><br><span class="line">            sum2[<span class="number">1</span>] += dis[v]*value[v];</span><br><span class="line">            dfs1(v);</span><br><span class="line">            num[u] += num[v];</span><br><span class="line">            sum[u] += sum[v];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">long</span> <span class="keyword">long</span> ans[N];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs2</span><span class="params">(<span class="keyword">int</span> u)</span></span>&#123;</span><br><span class="line">    ans[u] = sum1[u]*value[u] + sum2[u];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = f[u];i;i = a[i].next)&#123;</span><br><span class="line">        <span class="keyword">int</span> v = a[i].v,w = a[i].w;</span><br><span class="line">        <span class="keyword">if</span>(!vis[v])&#123;</span><br><span class="line">            vis[v] = <span class="number">1</span>;</span><br><span class="line">            sum1[v] = sum1[u] + (n-num[v]*<span class="number">2</span>)*w;</span><br><span class="line">            sum2[v] = sum2[u] + (Sum-sum[v]*<span class="number">2</span>)*w;</span><br><span class="line">            dfs2(v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;value[i]);</span><br><span class="line">        Sum += value[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> u,v,w;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d %d %d&quot;</span>,&amp;u,&amp;v,&amp;w);</span><br><span class="line">        add(u,v,w);</span><br><span class="line">        add(v,u,w);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span> vis);</span><br><span class="line">    vis[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    dfs1(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">memset</span>(vis,<span class="number">0</span>,<span class="keyword">sizeof</span> vis);</span><br><span class="line">    vis[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    dfs2(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>,ans[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
             </div>
             
@@ -318,7 +320,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "http://example.com/2021/01/18/dijkstra%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%8F%8A%E4%BC%98%E5%8C%96/",
+                text: "http://example.com/2021/01/24/A-Radio-Prize/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -330,10 +332,10 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "http://example.com/2021/01/18/dijkstra%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%8F%8A%E4%BC%98%E5%8C%96/";
-            const title         = "「dijkstra最短路及优化」";
-            const excerpt       = `算法描述该算法维护了两个点集，S和V。其中S集合为已经确定到源点最短路径的点集，V集合为未确定到源点最短路径的点集。
-循环进行以下操作直到所有点都确定了与源点的最短路径：从V集合中取出一点，使得该点到源点距离为V集合中最短。然后通过该...`;
+            const hostUrl       = "http://example.com/2021/01/24/A-Radio-Prize/";
+            const title         = "「A-Radio-Prize」";
+            const excerpt       = `题意给定一棵树，树上每条边及每个点都有权值。定义$P_u=\sum_{v}d(u,v)(t_u+t_v)$其中$d(u,v)$为树上u到v的距离，$t_u$和$t_v$分别是两点权值，求每个点的P值。
+分析首先我们可以看到$P_u$可...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -352,10 +354,10 @@
                                 <div class="footer-tag clearfix">
                                     <div class="pull-left">
                                         <i class="fa fa-tags"></i>
-                                        <a class="tag-none-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a>, <a class="tag-none-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a>
+                                        <a class="tag-none-link" href="/tags/%E6%80%9D%E7%BB%B4/" rel="tag">思维</a>
                                     </div>
                                     <div class="pull-date">
-                                        <span>最后编辑：2021-01-18</span>
+                                        <span>最后编辑：2021-01-24</span>
                                     </div>
                                 </div>
                     </footer>
@@ -363,12 +365,11 @@
         
             <nav class="navigation post-navigation clearfix" role="navigation">
                 
+                    <div class="nav-previous clearfix">
+                        <a title=" 链式结构入门" href="/2021/01/22/链式结构入门/">&lt; 上一篇</a>
+                    </div>
+                    
                         
-                            <div class="nav-next clearfix">
-                                <a title=" 可持久化数据结构之静态主席树" href="/2021/01/18/可持久化数据结构之静态主席树/">
-                                    下一篇 &gt;</a>
-                            </div>
-                            
             </nav>
             
                 
